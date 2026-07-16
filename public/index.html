@@ -1,0 +1,30 @@
+<!doctype html>
+<html lang="ja">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>fixeed — goonews.jp RSS 修正フィード</title>
+    <style>
+      body { font-family: system-ui, sans-serif; max-width: 42rem; margin: 3rem auto; padding: 0 1rem; line-height: 1.7; color: #222; }
+      code { background: #f2f2f2; padding: .1em .4em; border-radius: 4px; }
+      a { color: #0b66c3; }
+      .box { background: #f7f9fc; border: 1px solid #e2e8f0; border-radius: 8px; padding: 1rem 1.2rem; }
+    </style>
+  </head>
+  <body>
+    <h1>fixeed</h1>
+    <p>
+      <a href="https://www.goonews.jp/rss/rssall.xml">goonews.jp の RSS</a>
+      の壊れた日付を自動修正して再配信するフィードです。1時間ごとに更新されます。
+    </p>
+    <div class="box">
+      <p>購読用 URL:</p>
+      <p><a href="./rssall.xml"><code>rssall.xml</code></a></p>
+    </div>
+    <h2>修正内容</h2>
+    <ul>
+      <li><code>&lt;updated&gt;</code> の TZ 直後に混入した Unix タイムスタンプを除去</li>
+      <li><code>&lt;dc:date&gt;</code> の日本語相対日付 (<code>17時39分</code> / <code>07月15日</code>) を W3CDTF (ISO8601) に変換</li>
+    </ul>
+  </body>
+</html>

@@ -1,0 +1,52 @@
+name: Fix RSS & Deploy to Pages
+
+on:
+  schedule:
+    # 毎時0分に実行 (UTC)。GitHub の cron は UTC 基準。
+    - cron: "0 * * * *"
+  workflow_dispatch: {} # 手動実行も可能
+  push:
+    branches: [main]
+    paths:
+      - "fix-rss.ts"
+      - "public/index.html"
+      - ".github/workflows/fix-rss.yml"
+
+# Pages へのデプロイに必要な権限
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+# 実行中のデプロイをキャンセルせず、順番に処理する
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: latest
+
+      - name: Fetch & fix RSS
+        run: bun fix-rss.ts -o public/rssall.xml
+
+      - name: Configure Pages
+        uses: actions/configure-pages@v5
+
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: public
+
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
